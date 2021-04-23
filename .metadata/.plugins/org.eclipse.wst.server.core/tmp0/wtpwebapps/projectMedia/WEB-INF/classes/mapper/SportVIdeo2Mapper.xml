@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="video">
+	<select id="all" resultType="sportVideo2VO">
+		select * from VIDEO ORDER BY CLICKS/(SYSDATE - TO_DATE(VDATE1)) DESC
+	</select>
+	
+	<select id="all3" parameterType="sportVideo2VO" resultType="sportVideo2VO">
+		select * from VIDEO where mark = #{mark} or title like '%' ||  #{mark} || '%'
+	</select>
+	
+	<select id="select" parameterType="sportVideo2VO" resultType="sportVideo2VO">
+	<!-- ORM(Object RDB Mapping) -->
+	<!-- bbsVO에 컬럼명과 동일한 변수를 찾아서 set메서드로 값을 넣어줌. -->
+		select * from VIDEO where vnum = #{vnum}
+	</select>
+
+	<insert id="insert" parameterType="sportVideo2VO">
+		insert into "VIDEO" values (vnum.nextval, #{userid}, #{title}, sysdate, #{video}, #{pop_video}, #{watched_video}, #{future_video}, #{clicks}, #{good}, #{bad}, #{comment})
+	</insert>
+	
+	<select id="all2" parameterType="sportVideo2VO" resultType="sportVideo2VO">
+		select DISTINCT VIDEO.VNUM, IMAGE, TITLE, VDATE1, CLICKS from VIDEO, PERSONAL WHERE VIDEO.VNUM = PERSONAL.VNUM AND PERSONAL.USERID=#{userid}
+	</select> 
+	
+	<select id="future1" parameterType="sportVideo2VO" resultType="sportVideo2VO">
+		select DISTINCT VIDEO.VNUM, IMAGE, TITLE, VDATE1, CLICKS from VIDEO, PERSONAL WHERE VIDEO.VNUM = PERSONAL.VNUM AND PERSONAL.USERID=#{userid} AND PERSONAL.FUTUREVIDEO=1
+	</select> 
+	
+	<!-- <select id="all2" parameterType="sportVideo2VO" resultType="sportVideo2VO">
+		select * from VIDEO INNER JOIN PERSONAL ON VIDEO.VNUM = PERSONAL.VNUM AND PERSONAL.USERID=#{userid} 
+	</select>  -->
+</mapper>
+
+
